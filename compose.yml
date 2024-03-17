@@ -1,0 +1,33 @@
+version: '3.9'
+
+name: sigsci-docker
+services:
+  sigsci:
+    image: docker.io/signalsciences/sigsci-agent:latest
+    ports:
+      - "3000:80"
+      - "3001:81"
+    environment:
+      - SIGSCI_ACCESSKEYID=${SIGSCI_ACCESSKEYID}
+      - SIGSCI_SECRETACCESSKEY=${SIGSCI_SECRETACCESSKEY}
+    volumes:
+      - ./config:/etc/sigsci/
+    networks:
+      - sigsci-net
+    hostname: home-mbp
+  httpbin:
+    image: mccutchen/go-httpbin
+    container_name: httpbin
+    networks:
+      - sigsci-net
+  juiceshop:
+    image: bkimminich/juice-shop
+    container_name: juiceshop
+    networks:
+      - sigsci-net
+volumes:
+  config:
+networks:
+  sigsci-net:
+    external: true
+    name: sigsci-net
